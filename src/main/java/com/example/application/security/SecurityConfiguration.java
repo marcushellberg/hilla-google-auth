@@ -9,18 +9,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @Configuration
 public class SecurityConfiguration extends VaadinWebSecurity {
 
-    private static final String LOGIN_URL = "/login";
-    private final OAuthLogoutHandler logoutHandler;
-
-    SecurityConfiguration(OAuthLogoutHandler logoutHandler){
-        this.logoutHandler = logoutHandler;
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
         http.csrf().ignoringAntMatchers("/connect/**", "/logout");
-        http.oauth2Login().loginPage(LOGIN_URL).permitAll()
+        http.oauth2Login().loginPage("/login").permitAll()
                 .and().logout().logoutSuccessUrl("/").permitAll();
 
     }
