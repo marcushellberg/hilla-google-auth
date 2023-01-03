@@ -1,4 +1,4 @@
-package com.example.application.security;
+package com.example.application.endpoints;
 
 public record UserDetails(
         String email,

@@ -1,35 +1,68 @@
-import {createContext, ReactNode, useEffect, useState} from "react";
+import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 import {UserEndpoint} from "Frontend/generated/endpoints.js";
-import {logout} from "@hilla/frontend";
-import UserDetails from "Frontend/generated/com/example/application/security/UserDetails.js";
+import {logout as serverLogout} from "@hilla/frontend";
+import UserDetails from "Frontend/generated/com/example/application/endpoints/UserDetails.js";
 
-export function useAuth() {
+export function authHook() {
   const [authenticated, setAuthenticated] = useState(false);
-  const [authenticatedUser, setAuthenticatedUser] = useState<UserDetails>();
+  const [user, setUser] = useState<UserDetails>();
+  const [authInitialized, setAuthInitialized] = useState(false);
+
+  async function login() {
+    try {
+      const authUser = await UserEndpoint.getAuthenticatedUser();
+      setUser(authUser);
+      setAuthenticated(!!authUser);
+    } finally {
+      setAuthInitialized(true);
+    }
+  }
+
+  async function logout(redirect: string = '/login') {
+    setAuthenticated(false);
+    setUser(undefined);
+    setAuthInitialized(false);
+    await serverLogout();
+    location.href = `${location.origin}${redirect}`;
+  }
 
   useEffect(() => {
-    UserEndpoint.isAuthenticated().then(setAuthenticated)
-    UserEndpoint.getAuthenticatedUser().then(setAuthenticatedUser);
+    login();
   }, []);
 
   return {
     authenticated,
-    authenticatedUser,
-    logout: async () => {
-      await logout();
-      setAuthenticated(false);
-      setAuthenticatedUser(undefined);
-    }
+    authInitialized,
+    user,
+    login,
+    logout
   }
 }
 
-const AuthContext = createContext<ReturnType<typeof useAuth> | null>(null);
+type AuthContextType = ReturnType<typeof authHook>;
+
+const initialValue: AuthContextType = {
+  authenticated: false,
+  user: undefined,
+  authInitialized: false,
+  login: async () => {
+  },
+  logout: async () => {
+  }
+}
+
+
+const AuthContext = createContext<AuthContextType>(initialValue);
 
 interface AuthProviderProps {
   children: ReactNode
 }
 
 export function AuthProvider({children}: AuthProviderProps) {
-  const auth = useAuth();
+  const auth = authHook();
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>
+}
+
+export function useAuth() {
+  return useContext(AuthContext);
 }

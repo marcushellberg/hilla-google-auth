@@ -1,8 +1,8 @@
 package com.example.application.endpoints;
 
-import com.example.application.security.UserDetails;
-import com.example.application.security.UserService;
+import com.vaadin.flow.spring.security.AuthenticationContext;
 import dev.hilla.Endpoint;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 import javax.annotation.security.PermitAll;
 import java.util.Optional;
@@ -10,17 +10,14 @@ import java.util.Optional;
 @Endpoint
 @PermitAll
 public class UserEndpoint {
-    private final UserService userService;
+    private final AuthenticationContext authenticationContext;
 
-    public UserEndpoint(UserService userDetailsService) {
-        this.userService = userDetailsService;
-    }
-
-    public boolean isAuthenticated() {
-        return userService.isAuthenticated();
+    public UserEndpoint(AuthenticationContext authenticationContext) {
+        this.authenticationContext = authenticationContext;
     }
 
     public Optional<UserDetails> getAuthenticatedUser() {
-        return userService.getCurrentUserDetails();
+        return authenticationContext.getAuthenticatedUser(OidcUser.class)
+                .map(u -> new UserDetails(u.getEmail(), u.getFullName(), u.getPicture()));
     }
 }
