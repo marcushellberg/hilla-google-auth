@@ -12,7 +12,6 @@ public class SecurityConfiguration extends VaadinWebSecurity {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
-        http.csrf().ignoringAntMatchers("/connect/**", "/logout");
         http.oauth2Login().loginPage("/login").permitAll()
                 .and().logout().logoutSuccessUrl("/").permitAll();
 
