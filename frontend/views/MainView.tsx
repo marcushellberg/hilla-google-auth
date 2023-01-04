@@ -3,13 +3,8 @@ import {Button} from "@hilla/react-components/Button.js";
 import {useNavigate} from "react-router-dom";
 
 export function MainView() {
-  const navigate = useNavigate();
   const {user, logout} = useAuth();
 
-  function handleLogout() {
-    logout();
-    // navigate("/login");
-  }
 
   return (
     <div className="m-m">
@@ -18,7 +13,7 @@ export function MainView() {
           <img src={user.profilePictureUrl} alt={user.name} referrerPolicy="no-referrer"/>
       </div>}
       <p>
-        <Button onClick={handleLogout}>Log out</Button>
+        <Button onClick={() => logout()}>Log out</Button>
       </p>
     </div>
   )
