@@ -5,10 +5,10 @@ import {REDIRECT_PATH} from "Frontend/routes.js";
 
 interface ProtectedRouteProps {
   redirectPath?: string;
-  children: ReactElement
+  component: ReactElement
 }
 
-export function ProtectedRoute({redirectPath = '/login', children}: ProtectedRouteProps): ReactElement {
+export function ProtectedRoute({redirectPath = '/login', component}: ProtectedRouteProps): ReactElement {
   const {authenticated, authInitialized} = useAuth();
   const location = useLocation();
 
@@ -25,5 +25,5 @@ export function ProtectedRoute({redirectPath = '/login', children}: ProtectedRou
     return <Navigate to={redirectPath} replace/>
   }
 
-  return children ? children : <Outlet/>;
+  return component ? component : <Outlet/>;
 }

@@ -1,7 +1,13 @@
-import {createContext, ReactNode, useContext, useEffect, useState} from "react";
-import {UserEndpoint} from "Frontend/generated/endpoints.js";
-import {logout as serverLogout} from "@hilla/frontend";
-import UserDetails from "Frontend/generated/com/example/application/endpoints/UserDetails.js";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import { UserEndpoint } from 'Frontend/generated/endpoints.js';
+import { logout as serverLogout } from '@hilla/frontend';
+import UserDetails from 'Frontend/generated/com/example/application/endpoints/UserDetails.js';
 
 export function authHook() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -35,8 +41,8 @@ export function authHook() {
     authInitialized,
     user,
     login,
-    logout
-  }
+    logout,
+  };
 }
 
 type AuthContextType = ReturnType<typeof authHook>;
@@ -45,22 +51,19 @@ const initialValue: AuthContextType = {
   authenticated: false,
   user: undefined,
   authInitialized: false,
-  login: async () => {
-  },
-  logout: async () => {
-  }
-}
-
+  login: async () => {},
+  logout: async () => {},
+};
 
 const AuthContext = createContext<AuthContextType>(initialValue);
 
 interface AuthProviderProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
-export function AuthProvider({children}: AuthProviderProps) {
+export function AuthProvider({ children }: AuthProviderProps) {
   const auth = authHook();
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
