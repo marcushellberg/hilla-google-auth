@@ -4,7 +4,7 @@ import { MainView } from 'Frontend/views/MainView';
 import { ProtectedRoute } from 'Frontend/ProtectedRoute.js';
 import { SecretView } from 'Frontend/views/SecretView.js';
 
-export const REDIRECT_PATH = 'redirectPath';
+export const REDIRECT_PATH_KEY = 'redirectPath';
 
 const router = createBrowserRouter([
   { path: '/login', element: <LoginView /> },
