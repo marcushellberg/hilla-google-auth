@@ -11,14 +11,14 @@ import java.util.Optional;
 @PermitAll
 public class UserEndpoint {
 
-    private final AuthenticationContext authenticationContext;
+    private final AuthenticationContext authContext;
 
-    public UserEndpoint(AuthenticationContext authenticationContext) {
-        this.authenticationContext = authenticationContext;
+    public UserEndpoint(AuthenticationContext authContext) {
+        this.authContext = authContext;
     }
 
     public Optional<UserDetails> getAuthenticatedUser() {
-        return authenticationContext.getAuthenticatedUser(OidcUser.class)
+        return authContext.getAuthenticatedUser(OidcUser.class)
                 .map(u -> new UserDetails(
                         u.getEmail(),
                         u.getFullName(),
